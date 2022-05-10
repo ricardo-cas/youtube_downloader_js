@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const ytdl = require('ytdl-core');
 const ytpl = require('ytpl');
+const path = require('path');
 
 require('dotenv').config();
 
@@ -13,9 +14,14 @@ const morganEnv = process.env.MORGAN_ENV === 'production' ? 'tiny' : 'dev';
 const app = express();
 
 app.use(cors());
+app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(express.json());
 app.use(morgan(morganEnv));
+
+// app.use(express.static('./public'));
+
+// TODO: link da playlist: https://www.youtube.com/watch?v=v4Za061pQac&list=PLinUYPRAHYropd0w2RDoCR1tiT52ebsOL&index=31&ab_channel=NoCopyrightSounds
 
 app.get('/', (req, res) => {
     const { url } = req.query;
@@ -31,6 +37,23 @@ app.get('/video', (req, res) => {
             const title = info.videoDetails.title;
             res.header('Content-Disposition', `attachmentt; filename=${title}.mp4`);
             return ytdl(url, {
+                quality: 'highest',
+                format: 'mp4'
+            }).pipe(res);
+        }, console.log('Download concluído ;)'))
+        .catch(error => {
+            console.error(error);
+        });
+});
+
+app.post('/youtube', (req, res) => {
+    const url = req.body.query;
+    console.log(url);
+    ytdl.getBasicInfo(url)
+        .then(info => {
+            const title = info.videoDetails.title;
+            res.header('Content-Disposition', `attachmentt; filename=${title}.mp4`);
+            ytdl(url, {
                 quality: 'highest',
                 format: 'mp4'
             }).pipe(res);
