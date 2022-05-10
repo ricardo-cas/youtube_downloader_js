@@ -34,10 +34,41 @@ app.get('/video', (req, res) => {
                 quality: 'highest',
                 format: 'mp4'
             }).pipe(res);
-        })
+        }, console.log('Download concluído ;)'))
         .catch(error => {
             console.error(error);
         });
+});
+
+app.get('/playlis', async (req, res) => {
+    let { url } = req.query;
+
+    // const requestedPlaylistURL = req.query.url;
+    const requestedPlaylistURL = 'https://www.youtube.com/watch?v=v4Za061pQac&list=PLinUYPRAHYropd0w2RDoCR1tiT52ebsOL';
+    // const requestedPlaylistURL = 'PLinUYPRAHYropd0w2RDoCR1tiT52ebsOL';
+
+
+    console.log(await ytpl.validateID(requestedPlaylistURL));
+    const playlistID = await ytpl.getPlaylistID(requestedPlaylistURL);
+
+    const playlist = await ytpl(playlistID)
+
+    const channelID = playlist.author.channelID;
+    // return console.log(playlist);
+
+    // You can now use the .items property of all result batches e.g.:
+    // console.log('firstResultBatch', firstResultBatch.items);
+    // console.log('secondResultBatch', secondResultBatch.items);
+    // console.log('thirdResultBatch', thirdResultBatch.items);
+
+
+    // console.log('requestedPlaylistURL:\n', requestedPlaylistURL);
+    // console.log('videoID:\n', videoID);
+    res.json({
+        Autor: playlist.author,
+        Description: playlist.description,
+        channelID: channelID
+    });
 });
 
 // Error Handler
