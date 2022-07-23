@@ -63,7 +63,7 @@ app.post('/youtube', (req, res) => {
         });
 });
 
-app.get('/playlis', async (req, res) => {
+app.get('/playlist', async (req, res) => {
     let { url } = req.query;
 
     // const requestedPlaylistURL = req.query.url;

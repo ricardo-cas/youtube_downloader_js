@@ -17,12 +17,12 @@
     "helmet": "^5.0.2",
     "i": "^0.3.7",
     "morgan": "^1.10.0",
-    "npm": "^8.9.0",
+    "npm": "^8.15.0",
     "ytdl-core": "^4.11.0",
     "ytpl": "^2.3.0"
   },
   "devDependencies": {
     "eslint": "^8.12.0",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.19"
   }
 }
