@@ -73,66 +73,29 @@ app.get('/playlist', async (req, res) => {
     songs = [];
 
     let objSongs = {
-        id: '',
         title: '',
         shortUrl: '',
-        url: '',
     };
-    let result = []
-    let resultId = []
-    let resultTitles = []
-    let ressultShortUrl = []
 
-    // const requestedPlaylistURL = req.query.url;
     const requestedPlaylistURL = 'https://www.youtube.com/watch?v=v4Za061pQac&list=PLinUYPRAHYropd0w2RDoCR1tiT52ebsOL';
-    // const requestedPlaylistURL = 'PLinUYPRAHYropd0w2RDoCR1tiT52ebsOL';
     const playlistID = await ytpl.getPlaylistID(requestedPlaylistURL);
     const playlist = await ytpl(playlistID)
 
-    songs = playlist.items;
+    songs.push(playlist.items);
 
-    for (let index = 0; index < songs.length; index++) {
-        // console.log(songs[index].title);
-        result.push(
-            songs[index].id,
-            songs[index].title,
-            songs[index].shortUrl,
-            songs[index].url,
-            objSongs.id = songs[index].id,
-            objSongs.title = songs[index].title,
-            objSongs.shortUrl = songs[index].shortUrl,
-            objSongs.url = songs[index].url,
-
-        );
-        resultId.push(
-            songs[index].id,
-        )
-        resultTitles.push(
-            songs[index].title,
-        )
-        ressultShortUrl.push(
-            songs[index].shortUrl,
-
-        )
-        // for (let index = 0; index < result.length; index++) {
-        //     const element = result[index];
-        //     objSongs.push(
-        //     );
-
+    // songs[0].forEach(data => {
+    //     objSongs.title = data.title
+    //     objSongs.shortUrl = data.shortUrl
+    // });
+    for (let item in playlist.items) {
+        console.log('abc');
+        // if (playlist.items[item] !== undefined) {
+        //     // console.log('songs[item]', songs[item][0].title);
+        //     const { title, shortUrl } = playlist.items[item];
+        //     console.log(playlist.items[0].title);
         // }
-        // console.log(lista);
     }
 
-    res.json({
-        result,
-        objSongs,
-        resultId,
-        resultTitles,
-        ressultShortUrl,
-    });
-    // for (let index = 0; index < ressultShortUrl.length; index++) {
-    //     download(ressultShortUrl[index]);
-    // }
 });
 
 /**
