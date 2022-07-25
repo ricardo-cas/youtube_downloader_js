@@ -34,7 +34,7 @@ app.get('/video', (req, res) => {
 
     ytdl.getBasicInfo(url)
         .then(info => {
-            const title = info.videoDetails.title;
+            const title = formatTitle(info.videoDetails.title);
             res.header('Content-Disposition', `attachmentt; filename=${title}.mp4`);
             return ytdl(url, {
                 quality: 'highest',
@@ -46,22 +46,19 @@ app.get('/video', (req, res) => {
         });
 });
 
-app.post('/youtube', (req, res) => {
-    const url = req.body.query;
-    console.log(url);
-    ytdl.getBasicInfo(url)
-        .then(info => {
-            const title = info.videoDetails.title;
-            res.header('Content-Disposition', `attachmentt; filename=${title}.mp4`);
-            ytdl(url, {
-                quality: 'highest',
-                format: 'mp4'
-            }).pipe(res);
-        }, console.log('Download concluído ;)'))
-        .catch(error => {
-            console.error(error);
-        });
-});
+function formatTitle(string) {
+    /*
+    * Título de exemplo:
+    * const title = `Thiaguinho - Deixa Acontecer / Brilho de Cristal / Toda Noite (Álbum ​Tardezinha) [Áudio Oficial]`;
+    *
+    */
+
+    const newTitle = string.replace(/[​​/()-]/g, '');
+    const semColchete = newTitle.replace('/[//"[["]]"\s]/g', '');
+    const semEspeciais = semColchete.replace(/[\[\].!'@,><|://\\;&*()_+=]/g, "")
+    const regexFinal = semEspeciais.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+    return regexFinal;
+}
 
 app.get('/playlist', async (req, res) => {
     let { url } = req.query;
