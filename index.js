@@ -46,14 +46,21 @@ app.get('/video', (req, res) => {
         });
 });
 
-function formatTitle(string) {
-    /*
-    * Título de exemplo:
-    * const title = `Thiaguinho - Deixa Acontecer / Brilho de Cristal / Toda Noite (Álbum ​Tardezinha) [Áudio Oficial]`;
-    *
+function formatTitle(title) {
+    /**
+    * @param {string}: title;
+    * @Summary Função que formata o título do vídeo eliminando caracters especiais
+    * @Description dado uma string retorna uma nova string após aplicação de regex.
+    * @return {string} retorna uma nova string formatada
+    * @since 1.0.0
+    * @author: Ricardo Costa <ricardo_cas4@hotmail.com>
     */
 
-    const newTitle = string.replace(/[​​/()-]/g, '');
+    //Título de exemplo:
+    //const title = `Thiaguinho - Deixa Acontecer / Brilho de Cristal / Toda Noite (Álbum ​Tardezinha) [Áudio Oficial]`;
+
+
+    const newTitle = title.replace(/[​​/()-]/g, '');
     const semColchete = newTitle.replace('/[//"[["]]"\s]/g', '');
     const semEspeciais = semColchete.replace(/[\[\].!'@,><|://\\;&*()_+=]/g, "")
     const regexFinal = semEspeciais.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
