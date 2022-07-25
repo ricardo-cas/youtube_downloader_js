@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const ytdl = require('ytdl-core');
 const ytpl = require('ytpl');
 const path = require('path');
+const { string } = require('i/lib/util');
 
 require('dotenv').config();
 
@@ -69,7 +70,14 @@ function formatTitle(title) {
 
 app.get('/playlist', async (req, res) => {
     let { url } = req.query;
-    let songs = [];
+    songs = [];
+    let objSongs = {
+        id: '',
+        title: '',
+        shortUrl: '',
+        url: '',
+    };
+
     // const requestedPlaylistURL = req.query.url;
     const requestedPlaylistURL = 'https://www.youtube.com/watch?v=v4Za061pQac&list=PLinUYPRAHYropd0w2RDoCR1tiT52ebsOL';
     // const requestedPlaylistURL = 'PLinUYPRAHYropd0w2RDoCR1tiT52ebsOL';
@@ -82,7 +90,7 @@ app.get('/playlist', async (req, res) => {
     // console.log('playlist', playlist);
 
     const channelID = playlist.author.channelID;
-    console.log('channelID', channelID);
+    // console.log('channelID', channelID);
 
     // You can now use the .items property of all result batches e.g.:
     // console.log('firstResultBatch', firstResultBatch.items);
@@ -92,13 +100,45 @@ app.get('/playlist', async (req, res) => {
 
     // console.log('requestedPlaylistURL:\n', requestedPlaylistURL);
     // console.log('videoID:\n', videoID);
+
+    songs = playlist.items;
+    let result = []
+    let resultId = []
+    let resultTitles = []
+    for (let index = 0; index < songs.length; index++) {
+        // console.log(songs[index].title);
+        result.push(
+            songs[index].id,
+            songs[index].title,
+            songs[index].shortUrl,
+            songs[index].url,
+            objSongs.id = songs[index].id,
+            objSongs.title = songs[index].title,
+            objSongs.shortUrl = songs[index].shortUrl,
+            objSongs.url = songs[index].url,
+
+        );
+        resultId.push(
+            songs[index].id,
+        )
+        resultTitles.push(
+            songs[index].title,
+        )
+        // for (let index = 0; index < result.length; index++) {
+        //     const element = result[index];
+        //     objSongs.push(
+        //     );
+
+        // }
+        // console.log(lista);
+    }
+
     res.json({
-        Autor: playlist.author,
-        Description: playlist.description,
-        channelID: channelID,
-        Playlist: playlist
+        result,
+        objSongs,
+        resultId,
+        resultTitles,
     });
-    console.log('playlist items', playlist.items);
 });
 
 // Error Handler
