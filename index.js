@@ -71,40 +71,26 @@ function formatTitle(title) {
 app.get('/playlist', async (req, res) => {
     let { url } = req.query;
     songs = [];
+
     let objSongs = {
         id: '',
         title: '',
         shortUrl: '',
         url: '',
     };
+    let result = []
+    let resultId = []
+    let resultTitles = []
+    let ressultShortUrl = []
 
     // const requestedPlaylistURL = req.query.url;
     const requestedPlaylistURL = 'https://www.youtube.com/watch?v=v4Za061pQac&list=PLinUYPRAHYropd0w2RDoCR1tiT52ebsOL';
     // const requestedPlaylistURL = 'PLinUYPRAHYropd0w2RDoCR1tiT52ebsOL';
-
-
-    // console.log(await ytpl.validateID('requestedPlaylistURL', requestedPlaylistURL));
     const playlistID = await ytpl.getPlaylistID(requestedPlaylistURL);
-    // console.log('playlistID', playlistID);
     const playlist = await ytpl(playlistID)
-    // console.log('playlist', playlist);
-
-    const channelID = playlist.author.channelID;
-    // console.log('channelID', channelID);
-
-    // You can now use the .items property of all result batches e.g.:
-    // console.log('firstResultBatch', firstResultBatch.items);
-    // console.log('secondResultBatch', secondResultBatch.items);
-    // console.log('thirdResultBatch', thirdResultBatch.items);
-
-
-    // console.log('requestedPlaylistURL:\n', requestedPlaylistURL);
-    // console.log('videoID:\n', videoID);
 
     songs = playlist.items;
-    let result = []
-    let resultId = []
-    let resultTitles = []
+
     for (let index = 0; index < songs.length; index++) {
         // console.log(songs[index].title);
         result.push(
@@ -124,6 +110,10 @@ app.get('/playlist', async (req, res) => {
         resultTitles.push(
             songs[index].title,
         )
+        ressultShortUrl.push(
+            songs[index].shortUrl,
+
+        )
         // for (let index = 0; index < result.length; index++) {
         //     const element = result[index];
         //     objSongs.push(
@@ -138,8 +128,27 @@ app.get('/playlist', async (req, res) => {
         objSongs,
         resultId,
         resultTitles,
+        ressultShortUrl,
     });
+    // for (let index = 0; index < ressultShortUrl.length; index++) {
+    //     download(ressultShortUrl[index]);
+    // }
 });
+
+function download(url) {
+    return ytdl.getBasicInfo(url)
+        .then(info => {
+            const title = formatTitle(info.videoDetails.title);
+            res.header('Content-Disposition', `attachmentt; filename=${title}.mp4`);
+            return ytdl(url, {
+                quality: 'highest',
+                format: 'mp4'
+            }).pipe(res);
+        }, console.log('Download concluído...'))
+        .catch(error => {
+            console.error(error);
+        });
+}
 
 // Error Handler
 app.use((error, req, res, next) => {
