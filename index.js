@@ -135,6 +135,14 @@ app.get('/playlist', async (req, res) => {
     // }
 });
 
+/**
+ * FIXME: Necessário arrumar essa função, pois está dependendo do 'res', 
+ * FIXME: mas ele é o retorno da requisição http, precisa bolar um jeito de chamar a função no get do express
+ * FIXME: exemplo:
+ * 
+ * app.get('/playlist', (download()) => {}
+ * 
+ * */
 function download(url) {
     return ytdl.getBasicInfo(url)
         .then(info => {
