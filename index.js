@@ -65,19 +65,20 @@ app.post('/youtube', (req, res) => {
 
 app.get('/playlist', async (req, res) => {
     let { url } = req.query;
-
+    let songs = [];
     // const requestedPlaylistURL = req.query.url;
     const requestedPlaylistURL = 'https://www.youtube.com/watch?v=v4Za061pQac&list=PLinUYPRAHYropd0w2RDoCR1tiT52ebsOL';
     // const requestedPlaylistURL = 'PLinUYPRAHYropd0w2RDoCR1tiT52ebsOL';
 
 
-    console.log(await ytpl.validateID(requestedPlaylistURL));
+    // console.log(await ytpl.validateID('requestedPlaylistURL', requestedPlaylistURL));
     const playlistID = await ytpl.getPlaylistID(requestedPlaylistURL);
-
+    // console.log('playlistID', playlistID);
     const playlist = await ytpl(playlistID)
+    // console.log('playlist', playlist);
 
     const channelID = playlist.author.channelID;
-    // return console.log(playlist);
+    console.log('channelID', channelID);
 
     // You can now use the .items property of all result batches e.g.:
     // console.log('firstResultBatch', firstResultBatch.items);
@@ -90,8 +91,10 @@ app.get('/playlist', async (req, res) => {
     res.json({
         Autor: playlist.author,
         Description: playlist.description,
-        channelID: channelID
+        channelID: channelID,
+        Playlist: playlist
     });
+    console.log('playlist items', playlist.items);
 });
 
 // Error Handler
@@ -108,7 +111,5 @@ app.use((error, req, res, next) => {
 });
 
 app.listen(port, () => {
-    console.log(`:::::::::::::::::::::::::::::::::::::::::::`);
-    console.log(`  Server running on http://localhost:${port} `);
-    console.log(`:::::::::::::::::::::::::::::::::::::::::::`);
+    console.log(`Server running on http://localhost:${port}`);
 })
