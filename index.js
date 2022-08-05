@@ -70,31 +70,26 @@ function formatTitle(title) {
 
 app.get('/playlist', async (req, res) => {
     let { url } = req.query;
-    songs = [];
-
-    let objSongs = {
-        title: '',
-        shortUrl: '',
-    };
+    const titlesShortUrl = []
 
     const requestedPlaylistURL = 'https://www.youtube.com/watch?v=v4Za061pQac&list=PLinUYPRAHYropd0w2RDoCR1tiT52ebsOL';
     const playlistID = await ytpl.getPlaylistID(requestedPlaylistURL);
     const playlist = await ytpl(playlistID)
 
-    songs.push(playlist.items);
+    playlist.items.forEach(song => {
+        const { id, title, shortUrl } = song;
+        titlesShortUrl.push({ id, title, shortUrl })
+    });
+    console.log(titlesShortUrl);
 
-    // songs[0].forEach(data => {
-    //     objSongs.title = data.title
-    //     objSongs.shortUrl = data.shortUrl
-    // });
-    for (let item in playlist.items) {
-        console.log('abc');
-        // if (playlist.items[item] !== undefined) {
-        //     // console.log('songs[item]', songs[item][0].title);
-        //     const { title, shortUrl } = playlist.items[item];
-        //     console.log(playlist.items[0].title);
-        // }
-    }
+    res.json({
+        titlesShortUrl
+    });
+
+    titlesShortUrl.forEach(data => {
+        console.log(data.shortUrl);
+        // download(data.shortUrl);
+    });
 
 });
 
