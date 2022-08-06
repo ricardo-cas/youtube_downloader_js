@@ -112,7 +112,7 @@ function download(url) {
             }).pipe(res);
         }, console.log('Download concluído...'))
         .catch(error => {
-            console.error(error);
+            throw new Error(error);
         });
 }
 
@@ -123,7 +123,7 @@ app.use((error, req, res, next) => {
     } else {
         res.status(500);
     }
-    res.json({
+    return console.error(error), res.json({
         message: error.message,
         stack: process.env.NODE_ENV === 'production' ? '🥞' : error.stack,
     });
