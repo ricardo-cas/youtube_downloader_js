@@ -70,69 +70,27 @@ function formatTitle(title) {
 
 app.get('/playlist', async (req, res) => {
     let { url } = req.query;
-    songs = [];
+    const titlesShortUrl = []
 
-    let objSongs = {
-        id: '',
-        title: '',
-        shortUrl: '',
-        url: '',
-    };
-    let result = []
-    let resultId = []
-    let resultTitles = []
-    let ressultShortUrl = []
-
-    // const requestedPlaylistURL = req.query.url;
     const requestedPlaylistURL = 'https://www.youtube.com/watch?v=v4Za061pQac&list=PLinUYPRAHYropd0w2RDoCR1tiT52ebsOL';
-    // const requestedPlaylistURL = 'PLinUYPRAHYropd0w2RDoCR1tiT52ebsOL';
     const playlistID = await ytpl.getPlaylistID(requestedPlaylistURL);
     const playlist = await ytpl(playlistID)
 
-    songs = playlist.items;
-
-    for (let index = 0; index < songs.length; index++) {
-        // console.log(songs[index].title);
-        result.push(
-            songs[index].id,
-            songs[index].title,
-            songs[index].shortUrl,
-            songs[index].url,
-            objSongs.id = songs[index].id,
-            objSongs.title = songs[index].title,
-            objSongs.shortUrl = songs[index].shortUrl,
-            objSongs.url = songs[index].url,
-
-        );
-        resultId.push(
-            songs[index].id,
-        )
-        resultTitles.push(
-            songs[index].title,
-        )
-        ressultShortUrl.push(
-            songs[index].shortUrl,
-
-        )
-        // for (let index = 0; index < result.length; index++) {
-        //     const element = result[index];
-        //     objSongs.push(
-        //     );
-
-        // }
-        // console.log(lista);
-    }
+    playlist.items.forEach(song => {
+        const { id, title, shortUrl } = song;
+        titlesShortUrl.push({ id, title, shortUrl })
+    });
+    console.log(titlesShortUrl);
 
     res.json({
-        result,
-        objSongs,
-        resultId,
-        resultTitles,
-        ressultShortUrl,
+        titlesShortUrl
     });
-    // for (let index = 0; index < ressultShortUrl.length; index++) {
-    //     download(ressultShortUrl[index]);
-    // }
+
+    titlesShortUrl.forEach(data => {
+        console.log(data.shortUrl);
+        // download(data.shortUrl);
+    });
+
 });
 
 /**
